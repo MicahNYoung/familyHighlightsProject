@@ -16,14 +16,14 @@ import repositories.HighlightRepo;
 public class HighlightController {
     @Autowired
     HighlightRepo highlightRepo;
-
-    @GetMapping("new")
-    public String displayNewHighlightForm(Model model){
-
-    }
-
-    public String processNewHighlightForm(@ModelAttribute, Model model, Error errors) {
-
-    }
+//
+//    @GetMapping("new")
+//    public String displayNewHighlightForm(Model model){
+//
+//    }
+//
+//    public String processNewHighlightForm(@ModelAttribute, Model model, Error errors) {
+//
+//    }
 
 }

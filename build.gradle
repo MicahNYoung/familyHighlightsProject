@@ -2,7 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	//integrates node to Gradle so we can precompile React into JS
+	id "com.github.node-gradle.node" version "3.0.1"
 }
+
+apply plugin: 'io.spring.dependency-management'
 
 group = 'org.launchcode'
 version = '0.0.1-SNAPSHOT'
@@ -24,6 +28,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java'
+	//Java annotation library which helps reduce boilerplate code.
+//	compileOnly 'org.projectlombok:lombok'
+//	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -34,3 +43,15 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+task buildReactApp(type: NodeTask, dependsOn: 'npmInstall') {
+	script = project.file('node_modules/webpack/bin/webpack.js')
+	args = [
+			'--mode', 'development',
+			'--entry', './src/main/webapp/javascript/Main.jsx',
+			'-o', './src/main/resources/static/dist'
+	]
+}
+
+processResources.dependsOn 'buildReactApp'
+clean.delete << file('node_modules')
+clean.delete << file('src/main/resources/static/dist')

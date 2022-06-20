@@ -1,17 +1,20 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Created by Micah Young
  */
 @Entity
+
 public class FamilyMember {
     @Id
     @GeneratedValue
@@ -49,6 +52,13 @@ public class FamilyMember {
 
     @Size(max=1000, message = "Your image URL is too long")
     private String imageUrl;
+
+    @OneToMany(mappedBy = "templates/familyMember")
+    private final List<Highlight> highlights = new ArrayList<>();
+
+    @ManyToOne
+    private Family family;
+
 
     public FamilyMember(String firstName, String lastName, String email, String momFirst, String momLast, String dadFirst, String dadLast, String imageUrl) {
         this.firstName = firstName;
@@ -127,6 +137,18 @@ public class FamilyMember {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<Highlight> getHighlights() {
+        return highlights;
+    }
+
+    public Family getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
     }
 
     @Override
